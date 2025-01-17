@@ -1,4 +1,6 @@
-package com.wfuertes.infrastructure;
+package com.wfuertes.infrastructure.sql;
+
+import jakarta.inject.Singleton;
 
 import java.net.URL;
 import java.sql.Connection;
@@ -6,7 +8,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Objects;
 
+@Singleton
 public class ConnectionFactory {
+
     public Connection create() {
         try {
             final URL usersDbUrl = Objects.requireNonNull(ConnectionFactory.class.getResource("/users-tb.sqlite"),

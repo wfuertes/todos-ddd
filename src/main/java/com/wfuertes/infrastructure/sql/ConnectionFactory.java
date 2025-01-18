@@ -13,7 +13,7 @@ public class ConnectionFactory {
 
     public Connection create() {
         try {
-            final URL usersDbUrl = Objects.requireNonNull(ConnectionFactory.class.getResource("/users-tb.sqlite"),
+            final URL usersDbUrl = Objects.requireNonNull(ConnectionFactory.class.getResource("/todos-app-db.sqlite"),
                                                           "Database file not found");
             final var jdbcUrl = "jdbc:sqlite:" + usersDbUrl.getPath();
             var conn = DriverManager.getConnection(jdbcUrl);

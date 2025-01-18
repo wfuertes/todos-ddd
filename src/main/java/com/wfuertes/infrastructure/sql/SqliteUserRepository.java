@@ -3,7 +3,7 @@ package com.wfuertes.infrastructure.sql;
 import com.wfuertes.domain.UserRepository;
 import com.wfuertes.domain.entities.User;
 import com.wfuertes.domain.valueobjects.Email;
-import com.wfuertes.domain.valueobjects.PasswordHash;
+import com.wfuertes.domain.valueobjects.Password;
 import com.wfuertes.domain.valueobjects.UserId;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -69,8 +69,8 @@ public class SqliteUserRepository implements UserRepository {
                 "INSERT INTO main.users (id, email, password_hash, salt, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)")) {
             stmt.setString(1, user.id().toString());
             stmt.setString(2, user.email().value());
-            stmt.setBytes(3, user.passwordHash().hash());
-            stmt.setBytes(4, user.passwordHash().salt());
+            stmt.setBytes(3, user.password().hash());
+            stmt.setBytes(4, user.password().salt());
             stmt.setString(5, user.createdAt().toString());
             stmt.setString(6, user.updatedAt().toString());
             stmt.executeUpdate();
@@ -89,7 +89,7 @@ public class SqliteUserRepository implements UserRepository {
                         var user = new User(
                                 UserId.from(rs.getString("id")),
                                 Email.of(rs.getString("email")),
-                                PasswordHash.from(rs.getBytes("password_hash"), rs.getBytes("salt")),
+                                Password.from(rs.getBytes("password_hash"), rs.getBytes("salt")),
                                 Instant.parse(rs.getString("created_at")),
                                 Instant.parse(rs.getString("updated_at"))
                         );

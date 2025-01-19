@@ -27,6 +27,12 @@ public class Password {
             throw new IllegalArgumentException("Password value cannot be null or empty");
         }
 
+        if (!isStrongPassword(password)) {
+            throw new IllegalArgumentException(
+                    "Password must be at least 12 characters long, contain an uppercase letter, a lowercase letter, a digit, and a special character."
+            );
+        }
+
         try {
             final SecureRandom random = new SecureRandom();
             final byte[] salt = new byte[16];
@@ -92,5 +98,18 @@ public class Password {
         } catch (Exception e) {
             throw new RuntimeException("Failed to create user", e);
         }
+    }
+
+    private static boolean isStrongPassword(String password) {
+        if (password.length() < 12) {
+            return false;
+        }
+
+        boolean hasUppercase = password.chars().anyMatch(Character::isUpperCase);
+        boolean hasLowercase = password.chars().anyMatch(Character::isLowerCase);
+        boolean hasDigit = password.chars().anyMatch(Character::isDigit);
+        boolean hasSpecial = password.chars().anyMatch(c -> "!@#$%^&*()_+-=[]{}|;:'\",.<>?/".indexOf(c) >= 0);
+
+        return hasUppercase && hasLowercase && hasDigit && hasSpecial;
     }
 }

@@ -1,26 +1,32 @@
 package com.wfuertes.infrastructure.sql;
 
+import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
+import io.micronaut.context.annotation.Value;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.net.URL;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Objects;
 
 @Singleton
 public class ConnectionFactory {
+    private final MysqlConnectionPoolDataSource dataSource;
+
+    @Inject
+    ConnectionFactory(@Value("${datasources.default.url}") String url,
+                      @Value("${datasources.default.username}") String username,
+                      @Value("${datasources.default.password}") String password) {
+
+        final var dataSource = new MysqlConnectionPoolDataSource();
+        dataSource.setUrl(url);
+        dataSource.setUser(username);
+        dataSource.setPassword(password);
+
+        this.dataSource = dataSource;
+    }
 
     public Connection create() {
         try {
-            final URL usersDbUrl = Objects.requireNonNull(ConnectionFactory.class.getResource("/todos-app-db.sqlite"),
-                                                          "Database file not found");
-            final var jdbcUrl = "jdbc:sqlite:" + usersDbUrl.getPath();
-            var conn = DriverManager.getConnection(jdbcUrl);
-            if (conn == null) {
-                throw new SQLException("Connection to the database failed");
-            }
-            return conn;
+            return dataSource.getPooledConnection().getConnection();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

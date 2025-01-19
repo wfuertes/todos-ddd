@@ -13,8 +13,6 @@ import io.micronaut.security.token.Claims;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
 @Singleton
